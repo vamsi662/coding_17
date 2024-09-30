@@ -17,7 +17,14 @@ const transactionTypeOptions = [
 ]
 
 class MoneyManager extends Component {
-  state = {transactionList: [], title: '', amount: '', type: ''}
+  state = {
+    transactionList: [],
+    title: '',
+    amount: '',
+    type: '',
+    income: 0,
+    expenses: 0,
+  }
 
   addTransaction = event => {
     event.preventDefault()
@@ -27,6 +34,8 @@ class MoneyManager extends Component {
         ...prevState.transactionList,
         {id: v4(), title, amount, type},
       ],
+      income: prevState.income + (type === 'INCOME' ? amount : 0),
+      expenses: prevState.expenses + (type === 'EXPENSES' ? amount : 0),
       title: '',
       amount: '',
     }))
@@ -50,12 +59,19 @@ class MoneyManager extends Component {
     const deleteIndex = transactionList.findIndex(
       eachobject => eachobject.id === id,
     )
+    const deleteTransactionObject = transactionList[deleteIndex]
+    const {type, amount} = deleteTransactionObject
     transactionList.splice(deleteIndex, 1)
-    this.setState({transactionList})
+    this.setState(prevState => ({
+      transactionList,
+      income: type === 'INCOME' ? prevState.income - amount : prevState.income,
+      expenses:
+        type === 'EXPENSES' ? prevState.expenses - amount : prevState.expenses,
+    }))
   }
 
   render() {
-    const {transactionList, title, amount} = this.state
+    const {transactionList, title, amount, income, expenses} = this.state
     return (
       <div className="bg-con">
         <div className="banner">
@@ -65,7 +81,7 @@ class MoneyManager extends Component {
             <span className="welcome-subtext"> Money Manager</span>
           </p>
         </div>
-        <MoneyDetails transactionlist={transactionList} />
+        <MoneyDetails income={income} expenses={expenses} />
         <div className="input-history-transaction-con">
           <form className="transaction-form" onSubmit={this.addTransaction}>
             <h1 className="transaction-heading">Add Transaction</h1>
@@ -101,12 +117,12 @@ class MoneyManager extends Component {
               ))}
             </select>
             <br />
-            <button className="btn" type="submit">
+            <button className="add-btn" type="submit">
               Add
             </button>
           </form>
           <div className="history-con">
-            <p className="history-heading">History</p>
+            <h1 className="history-heading">History</h1>
             <ul className="transaction-con">
               <li className="list-header">
                 <p>Title</p>

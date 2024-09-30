@@ -1,20 +1,8 @@
 import './index.css'
 
 const MoneyDetails = props => {
-  const {transactionlist} = props
-  console.log(transactionlist)
-  let balance = 0
-  let income = 0
-  let expense = 0
-  for (const eachObject in transactionlist) {
-    if (eachObject.type === 'INCOME') {
-      income += eachObject.amount
-      balance += eachObject.amount
-    } else {
-      expense += eachObject.amount
-      balance -= eachObject.amount
-    }
-  }
+  const {income, expenses} = props
+  const balance = income - expenses
   return (
     <div className="income-expense-con">
       <div className="amount-con balance">
@@ -25,7 +13,7 @@ const MoneyDetails = props => {
             alt="balance"
           />
         </div>
-        <div className="display-amount-con" data-testid="balanceAmount">
+        <div className="display-amount-con">
           <p className="amount-heading">Your Balance</p>
           <p className="display-amount" data-testid="balanceAmount">
             Rs {balance}
@@ -58,7 +46,7 @@ const MoneyDetails = props => {
         <div className="display-amount-con">
           <p className="amount-heading">Your Expenses</p>
           <p className="display-amount" data-testid="expensesAmount">
-            Rs {expense}
+            Rs {expenses}
           </p>
         </div>
       </div>
