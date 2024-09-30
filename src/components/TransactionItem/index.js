@@ -9,7 +9,7 @@ const TransactionItem = props => {
   return (
     <li className="transaction-item">
       <p>{title}</p>
-      <p>{amount}</p>
+      <p>Rs {amount}</p>
       <p>{type}</p>
       <div>
         <button
